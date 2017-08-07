@@ -197,15 +197,16 @@ public class SelectionTableHeader<T> {
 	 *  Sort the Table Column (which are selected) after Space is hittet
 	 */
 	private void sortTableColumn() {
-		if (table.getSortOrder().contains(columnPosiEqualsAktivColumn())) {
-			if (columnPosiEqualsAktivColumn().getSortType().name().equals("ASCENDING")) {
-				columnPosiEqualsAktivColumn().setSortType(TableColumn.SortType.DESCENDING);
+		TableColumn<T, ?> tempTableColumn = columnPosiEqualsAktivColumn();
+		if (table.getSortOrder().contains(tempTableColumn)) {
+			if (tempTableColumn.getSortType().name().equals("ASCENDING")) {
+				tempTableColumn.setSortType(TableColumn.SortType.DESCENDING);
 			} else {
-				table.getSortOrder().remove(columnPosiEqualsAktivColumn());
+				table.getSortOrder().remove(tempTableColumn);
 			}
 		} else {
-			columnPosiEqualsAktivColumn().setSortType(TableColumn.SortType.ASCENDING);
-			table.getSortOrder().add(columnPosiEqualsAktivColumn());
+			tempTableColumn.setSortType(TableColumn.SortType.ASCENDING);
+			table.getSortOrder().add(tempTableColumn);
 		}
 	}
 
