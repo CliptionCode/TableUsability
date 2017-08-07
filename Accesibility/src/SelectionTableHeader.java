@@ -111,7 +111,8 @@ public class SelectionTableHeader<T> {
 	/**
 	 *  Activate Accessibility Mode
 	 *  Be aware, that the KeyCodes: KeyCode.TAB and KeyCode.ESCAPE are disabling the Accessibility Mode
-	 * @param table TableView, which need to get a better Accessibility
+	 *  @param table TableView, which need to get a better Accessibility.
+	 *  Make sure, that the type of the Table Columns are "TooltipTableColumn"'s
 	 */
 	public void activateAccessibility(TableView<T> table) {
 		if(table != null && table.getColumns() != null && !table.getColumns().isEmpty()){
