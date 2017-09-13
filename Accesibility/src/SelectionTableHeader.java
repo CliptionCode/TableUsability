@@ -21,85 +21,88 @@ import javafx.scene.input.KeyEvent;
 public class SelectionTableHeader<T> {
 
 	/**
-	 *  List of all Columns from the Table
+	 * List of all Columns from the Table
 	 */
 	private ArrayList<Label> allColumnHeader = new ArrayList<>();
-	
+
 	/**
-	 *  List of columnTablePosition's within the Table, which need to change
+	 * List of columnTablePosition's within the Table, which need to change
 	 */
 	private ArrayList<Integer> changeColumnIndex = new ArrayList<>();
-	
+
 	/**
-	 *  This Column Position is focused
+	 * This Column Position is focused
 	 */
 	private int activeColumnHeader = 0;
-	
+
 	/**
-	 *  Needed for Orientation after Table Columns switched
+	 * Needed for Orientation after Table Columns switched
 	 */
 	private int lastSelectedColumn;
-	
+
 	/**
-	 *  Needed for Orientation after Table Columns switched
+	 * Needed for Orientation after Table Columns switched
 	 */
 	private int firstSelectedColumn;
-	
+
 	/**
-	 *  Start of the Navigation
+	 * Start of the Navigation
 	 */
 	private int startColumn;
-	
+
 	/**
-	 *  Is Accessibility Mode active? (After KeyCodeCombination is triggered)
+	 * Is Accessibility Mode active? (After KeyCodeCombination is triggered)
 	 */
 	private boolean eventHandlerActive = false;
-	
+
 	/**
-	 *  EventHandler, which activates the KeyCombinations and the Logic, after one of the Custom Key's is Pressed.
+	 * EventHandler, which activates the KeyCombinations and the Logic, after
+	 * one of the Custom Key's is Pressed.
 	 */
 	private EventHandler<KeyEvent> eventHandler;
-	
+
 	/**
-	 *  JavaFX TableView, which can use the Accessibility Mode
+	 * JavaFX TableView, which can use the Accessibility Mode
 	 */
 	private TableView<T> table;
-	
+
 	/**
-	 *  List of all Table Columns from the table
+	 * List of all Table Columns from the table
 	 */
 	private ObservableList<TableColumn<T, ?>> allTableColumns = FXCollections.observableArrayList();
-	
+
 	/**
-	 *  Deactivate Accessibility Mode with given KeyCombination
+	 * Deactivate Accessibility Mode with given KeyCombination
 	 */
 	private final KeyCombination keyCombinationTab = new KeyCodeCombination(KeyCode.TAB, KeyCombination.SHIFT_DOWN);
-	
+
 	/**
-	 *  Activate Accessibility Mode with CONTROL_DOWN + H
+	 * Activate Accessibility Mode with CONTROL_DOWN + H
 	 */
 	private KeyCombination keyCombinationH = new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN);
-	
+
 	/**
-	 *  After Accessibility Mode is active, Select multiple Columns with SHIFT + LEFT_ARROW
+	 * After Accessibility Mode is active, Select multiple Columns with SHIFT +
+	 * LEFT_ARROW
 	 */
-	private KeyCombination keyCombinationShiftLeft = new KeyCodeCombination(KeyCode.LEFT,
-			KeyCombination.SHIFT_DOWN);
-	
+	private KeyCombination keyCombinationShiftLeft = new KeyCodeCombination(KeyCode.LEFT, KeyCombination.SHIFT_DOWN);
+
 	/**
-	 *  After Accessibility Mode is active, Select multiple Columns with SHIFT + RIGHT_ARROW
+	 * After Accessibility Mode is active, Select multiple Columns with SHIFT +
+	 * RIGHT_ARROW
 	 */
-	private KeyCombination keyCombinationShiftRight = new KeyCodeCombination(KeyCode.RIGHT,
-			KeyCombination.SHIFT_DOWN);
-	
+	private KeyCombination keyCombinationShiftRight = new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.SHIFT_DOWN);
+
 	/**
-	 *  After Accessibility Mode is active, Switch selected Columns with CONTROL_DOWN + LEFT_ARROW
+	 * After Accessibility Mode is active, Switch selected Columns with
+	 * CONTROL_DOWN + LEFT_ARROW
 	 */
 	private KeyCombination keyCombinationControlLeft = new KeyCodeCombination(KeyCode.LEFT,
 			KeyCombination.CONTROL_DOWN);
-	
+
 	/**
-	 *  After Accessibility Mode is active, Switch selected Columns with CONTROL_DOWN + RIGHT_ARROW
+	 * After Accessibility Mode is active, Switch selected Columns with
+	 * CONTROL_DOWN + RIGHT_ARROW
 	 */
 	private KeyCombination keyCombinationControlRight = new KeyCodeCombination(KeyCode.RIGHT,
 			KeyCombination.CONTROL_DOWN);
@@ -109,32 +112,35 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Activate Accessibility Mode
-	 *  Be aware, that the KeyCodes: KeyCode.TAB and KeyCode.ESCAPE are disabling the Accessibility Mode
-	 *  @param table TableView, which need to get a better Accessibility.
-	 *  Make sure, that the type of the Table Columns are "TooltipTableColumn"'s
+	 * Activate Accessibility Mode Be aware, that the KeyCodes: KeyCode.TAB and
+	 * KeyCode.ESCAPE are disabling the Accessibility Mode
+	 * 
+	 * @param table
+	 *            TableView, which need to get a better Accessibility. Make
+	 *            sure, that the type of the Table Columns are
+	 *            "TooltipTableColumn"'s
 	 */
 	public void activateAccessibility(TableView<T> table) {
-		if(table != null && table.getColumns() != null && !table.getColumns().isEmpty()){
+		if (table != null && table.getColumns() != null && !table.getColumns().isEmpty()) {
 			this.table = table;
 			for (Node node : table.lookupAll(".column-header > .label")) {
 				allColumnHeader.add(((Label) node));
 			}
-			if(allColumnHeader.isEmpty()){
+			if (allColumnHeader.isEmpty()) {
 				for (int i = 0; i < table.getColumns().size(); i++) {
-					allColumnHeader.add(new Label(""+i));
+					allColumnHeader.add(new Label("" + i));
 				}
 			}
 			renewTablePositions();
 			allTableColumns.addAll(table.getColumns());
 			selectionHeader();
-		}else{
+		} else {
 			System.err.println("Table or TableColumn is Null");
 		}
 	}
 
 	/**
-	 *  Logic, behind the Selection of the Table Column
+	 * Logic, behind the Selection of the Table Column
 	 */
 	private void selectionHeader() {
 		eventHandler = new EventHandler<KeyEvent>() {
@@ -195,7 +201,7 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Sort the Table Column (which are selected) after Space is hittet
+	 * Sort the Table Column (which are selected) after Space is hittet
 	 */
 	private void sortTableColumn() {
 		TableColumn<T, ?> tempTableColumn = columnPosiEqualsAktivColumn();
@@ -212,12 +218,12 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Change the Background Color to show, which Column is selected
+	 * Change the Background Color to show, which Column is selected
 	 */
 	private void changeHeader() {
 		for (int i = 0; i < allColumnHeader.size(); i++) {
 			if (i == activeColumnHeader) {
-				columnPosiEqualsAktivColumn().setStyle("-fx-background-color: white");
+				columnPosiEqualsAktivColumn().setStyle("-fx-background-color: " + ColumnColor.WHITE);
 				startColumn = activeColumnHeader;
 			} else if (activeColumnHeader < 0) {
 				activeColumnHeader = 0;
@@ -235,7 +241,7 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Disable / Deactivate the Accessibility Mode
+	 * Disable / Deactivate the Accessibility Mode
 	 */
 	public void lostSelectionHead() {
 		activeColumnHeader = 0;
@@ -247,10 +253,13 @@ public class SelectionTableHeader<T> {
 		eventHandlerActive = false;
 		changeColumnIndex.clear();
 	}
-	
+
 	/**
-	 *  Change the Border of the selected Table Column to red
-	 * @param option Jump-Option (1 = jump backwards through selected Columns, 2 = jump forwards through selected Columns)
+	 * Change the Border of the selected Table Column to red
+	 * 
+	 * @param option
+	 *            Jump-Option (1 = jump backwards through selected Columns, 2 =
+	 *            jump forwards through selected Columns)
 	 */
 	private void markedColumn(int option) {
 		if (changeColumnIndex.size() == 0) {
@@ -267,7 +276,7 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  After Table Columns are switched, Select the last active Table Column
+	 * After Table Columns are switched, Select the last active Table Column
 	 */
 	private void checkColumns() {
 		for (int i = 0; i < changeColumnIndex.size(); i++) {
@@ -280,8 +289,12 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  After navigate to left or right, set the un-selected Table Columns to normal Colors
-	 * @param option Jump-Option (1 = jump backwards through selected Columns, 2 = jump forwards through selected Columns)
+	 * After navigate to left or right, set the un-selected Table Columns to
+	 * normal Colors
+	 * 
+	 * @param option
+	 *            Jump-Option (1 = jump backwards through selected Columns, 2 =
+	 *            jump forwards through selected Columns)
 	 */
 	private void jumpSelection(int option) {
 		if (option == 1) {
@@ -306,13 +319,14 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Is selected column equals activeColumnHeader
-	 * @return Active TableColumn (Selected). If no Column is selected, than return null.
+	 * Is selected column equals activeColumnHeader
+	 * 
+	 * @return Active TableColumn (Selected). If no Column is selected, than
+	 *         return null.
 	 */
 	private TableColumn<T, ?> columnPosiEqualsAktivColumn() {
 		for (int i = 0; i < table.getColumns().size(); i++) {
-			if (((TooltipTableColumn<T, ?>) table.getColumns().get(i))
-					.getColumnTablePosition() == activeColumnHeader) {
+			if (((TooltipTableColumn<T, ?>) table.getColumns().get(i)).getColumnTablePosition() == activeColumnHeader) {
 				return table.getColumns().get(i);
 			}
 		}
@@ -320,9 +334,13 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Logic, to switch Table Columns
-	 * @param startPositions The Index of all selected Columns, which need to be switched
-	 * @param rightArrowKeyPressed Switch the selected Columns (true = Switch to the right, false = Switch to the left)
+	 * Logic, to switch Table Columns
+	 * 
+	 * @param startPositions
+	 *            The Index of all selected Columns, which need to be switched
+	 * @param rightArrowKeyPressed
+	 *            Switch the selected Columns (true = Switch to the right, false
+	 *            = Switch to the left)
 	 */
 	private void switchColumns(ArrayList<Integer> startPositions, Boolean rightArrowKeyPressed) {
 		if (startPositions == null || startPositions.size() <= 0
@@ -334,8 +352,8 @@ public class SelectionTableHeader<T> {
 			if (startPositions.get(startPositions.size() - 1) + 1 >= table.getColumns().size())
 				return;
 
-			((TooltipTableColumn<T, ?>) table.getColumns()
-					.get(startPositions.get(startPositions.size() - 1) + 1)).setColumnTablePosition(startPositions.get(0));
+			((TooltipTableColumn<T, ?>) table.getColumns().get(startPositions.get(startPositions.size() - 1) + 1))
+					.setColumnTablePosition(startPositions.get(0));
 			for (int j = 0; j < startPositions.size(); j++) {
 				((TooltipTableColumn<T, ?>) table.getColumns().get(startPositions.get(j)))
 						.setColumnTablePosition(startPositions.get(j) + 1);
@@ -377,14 +395,14 @@ public class SelectionTableHeader<T> {
 	}
 
 	/**
-	 *  Set the Table Column positions (needed to initialize Accessibility Mode)
+	 * Set the Table Column positions (needed to initialize Accessibility Mode)
 	 */
 	private void renewTablePositions() {
 		for (int i = 0; i < table.getColumns().size(); i++) {
 			((TooltipTableColumn<T, ?>) table.getColumns().get(i)).setColumnTablePosition(i);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return The Position of all Selected Columns in a List
@@ -395,7 +413,9 @@ public class SelectionTableHeader<T> {
 
 	/**
 	 * Set already Selected Columns
-	 * @param changeColumnIndex Column Positions, which are visible and targetable
+	 * 
+	 * @param changeColumnIndex
+	 *            Column Positions, which are visible and targetable
 	 */
 	public void setChangeColumnIndex(ArrayList<Integer> changeColumnIndex) {
 		this.changeColumnIndex = changeColumnIndex;
@@ -411,41 +431,55 @@ public class SelectionTableHeader<T> {
 
 	/**
 	 * Default activation KeyCombination: CONTROL_DOWN + KeyCode.H
-	 * @param keyCombinationH Your Custom KeyCombination to activate the Accessibility Mode
+	 * 
+	 * @param keyCombinationH
+	 *            Your Custom KeyCombination to activate the Accessibility Mode
 	 */
 	public void setActivateAccessibilityModeKeyCombination(KeyCombination keyCombinationH) {
 		this.keyCombinationH = keyCombinationH;
 	}
 
 	/**
-	 * Hold SHIFT_DOWN and Press or Hold the LEFT-Arrow-Key to select the Columns on the left side Step by Step.
-	 * Default Start to Select of Multiple Columns while holding SHIFT_DOWN + KeyCode.LEFT
-	 * @param keyCombinationShiftLeft Your Custom KeyCombination to select the Columns to the left
+	 * Hold SHIFT_DOWN and Press or Hold the LEFT-Arrow-Key to select the
+	 * Columns on the left side Step by Step. Default Start to Select of
+	 * Multiple Columns while holding SHIFT_DOWN + KeyCode.LEFT
+	 * 
+	 * @param keyCombinationShiftLeft
+	 *            Your Custom KeyCombination to select the Columns to the left
 	 */
 	public void setSelectMultipleColumnsKeyCombination(KeyCombination keyCombinationShiftLeft) {
 		this.keyCombinationShiftLeft = keyCombinationShiftLeft;
 	}
 
 	/**
-	 * Hold SHIFT_DOWN and Press or Hold the Right-Arrow-Key to select the Columns on the right side Step by Step
-	 * Default Start to Select of Multiple Columns while holding SHIFT_DOWN + KeyCode.RIGHT
-	 * @param keyCombinationShiftRight Your Custom KeyCombination to select the Columns to the right
+	 * Hold SHIFT_DOWN and Press or Hold the Right-Arrow-Key to select the
+	 * Columns on the right side Step by Step Default Start to Select of
+	 * Multiple Columns while holding SHIFT_DOWN + KeyCode.RIGHT
+	 * 
+	 * @param keyCombinationShiftRight
+	 *            Your Custom KeyCombination to select the Columns to the right
 	 */
 	public void setKeyCombinationShiftRight(KeyCombination keyCombinationShiftRight) {
 		this.keyCombinationShiftRight = keyCombinationShiftRight;
 	}
 
 	/**
-	 * Default Switch selected Columns to the Left, while holding CONTROL_DOWN + KeyCode.LEFT
-	 * @param keyCombinationControlLeft Your Custom KeyCombination to switch the Columns to the left
+	 * Default Switch selected Columns to the Left, while holding CONTROL_DOWN +
+	 * KeyCode.LEFT
+	 * 
+	 * @param keyCombinationControlLeft
+	 *            Your Custom KeyCombination to switch the Columns to the left
 	 */
 	public void setKeyCombinationControlLeft(KeyCombination keyCombinationControlLeft) {
 		this.keyCombinationControlLeft = keyCombinationControlLeft;
 	}
 
 	/**
-	 * Default Switch selected Columns to the Right, while holding CONTROL_DOWN + KeyCode.RIGHT
-	 * @param keyCombinationControlRight Your Custom KeyCombination to switch the Columns to the right
+	 * Default Switch selected Columns to the Right, while holding CONTROL_DOWN
+	 * + KeyCode.RIGHT
+	 * 
+	 * @param keyCombinationControlRight
+	 *            Your Custom KeyCombination to switch the Columns to the right
 	 */
 	public void setKeyCombinationControlRight(KeyCombination keyCombinationControlRight) {
 		this.keyCombinationControlRight = keyCombinationControlRight;
@@ -453,11 +487,12 @@ public class SelectionTableHeader<T> {
 
 	/**
 	 * Is Accessibility Mode active?
-	 * @return true = Yes, Accessibility Mode is active and false = No, Accessibility Mode is deactivated
+	 * 
+	 * @return true = Yes, Accessibility Mode is active and false = No,
+	 *         Accessibility Mode is deactivated
 	 */
 	public boolean isAccessibilityModeActive() {
 		return eventHandlerActive;
 	}
-	
-}
 
+}
