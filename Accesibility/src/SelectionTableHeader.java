@@ -107,6 +107,16 @@ public class SelectionTableHeader<T> {
 	private KeyCombination keyCombinationControlRight = new KeyCodeCombination(KeyCode.RIGHT,
 			KeyCombination.CONTROL_DOWN);
 
+	/**
+	 * Default Background Color for the Columns, which are selected is WHITE
+	 */
+	private ColumnColor columnBackgroundColor = ColumnColor.WHITE;
+
+	/**
+	 * Default Border Color for the Columns, which are Selected with SHIFT + ARROWS, is RED
+	 */
+	private ColumnColor markedColumnColor = ColumnColor.RED;
+
 	public SelectionTableHeader() {
 
 	}
@@ -223,7 +233,7 @@ public class SelectionTableHeader<T> {
 	private void changeHeader() {
 		for (int i = 0; i < allColumnHeader.size(); i++) {
 			if (i == activeColumnHeader) {
-				columnPosiEqualsAktivColumn().setStyle("-fx-background-color: " + ColumnColor.WHITE);
+				columnPosiEqualsAktivColumn().setStyle("-fx-background-color: " + columnBackgroundColor.getColor());
 				startColumn = activeColumnHeader;
 			} else if (activeColumnHeader < 0) {
 				activeColumnHeader = 0;
@@ -264,7 +274,7 @@ public class SelectionTableHeader<T> {
 	private void markedColumn(int option) {
 		if (changeColumnIndex.size() == 0) {
 			changeColumnIndex.add(activeColumnHeader);
-			columnPosiEqualsAktivColumn().setStyle("-fx-border-color: red");
+			columnPosiEqualsAktivColumn().setStyle("-fx-border-color: " + markedColumnColor.getColor());
 		} else if (activeColumnHeader > allColumnHeader.size()) {
 			activeColumnHeader = 0;
 		} else if (activeColumnHeader < 0) {
@@ -285,7 +295,7 @@ public class SelectionTableHeader<T> {
 			}
 		}
 		changeColumnIndex.add(activeColumnHeader);
-		columnPosiEqualsAktivColumn().setStyle("-fx-border-color: red");
+		columnPosiEqualsAktivColumn().setStyle("-fx-border-color: " + markedColumnColor.getColor());
 	}
 
 	/**
@@ -304,7 +314,7 @@ public class SelectionTableHeader<T> {
 				jump = 0;
 			}
 			changeColumnIndex.add(jump);
-			table.getColumns().get(jump).setStyle("-fx-border-color: red");
+			table.getColumns().get(jump).setStyle("-fx-border-color: " + markedColumnColor.getColor());
 		} else if (option == 2) {
 			lastSelectedColumn++;
 			int jump = startColumn + lastSelectedColumn;
@@ -312,7 +322,7 @@ public class SelectionTableHeader<T> {
 				jump = allColumnHeader.size() - 1;
 			}
 			changeColumnIndex.add(jump);
-			table.getColumns().get(jump).setStyle("-fx-border-color: red");
+			table.getColumns().get(jump).setStyle("-fx-border-color: " + markedColumnColor.getColor());
 		} else {
 
 		}
@@ -493,6 +503,22 @@ public class SelectionTableHeader<T> {
 	 */
 	public boolean isAccessibilityModeActive() {
 		return eventHandlerActive;
+	}
+
+	/**
+	 * Default Background Color for the Columns, which are selected is WHITE
+	 * @param columnBackgroundColor WHITE
+	 */
+	public void setColumnBackgroundColor(ColumnColor columnBackgroundColor) {
+		this.columnBackgroundColor = columnBackgroundColor;
+	}
+
+	/**
+	 * Default Border Color for the Columns, which are Selected with SHIFT + ARROWS, is RED
+	 * @param markedColumnColor RED
+	 */
+	public void setMarkedColumnColor(ColumnColor markedColumnColor) {
+		this.markedColumnColor = markedColumnColor;
 	}
 
 }

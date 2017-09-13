@@ -3,7 +3,9 @@ public enum ColumnColor {
 	WHITE("white"),
 	BLACK("black"),
 	YELLOW("yellow"),
-	GREEN("green");
+	GREEN("green"),
+	RED("red"),
+	PINK("pink");
 	
 	private String color;
 	
