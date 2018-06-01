@@ -30,3 +30,5 @@ Beispiel:
 			sth.activateAccessibility(tableView);
 		}
 	}
+
+Anschließend müssen Sie Ihre Anwendung starten, den Fokus auf die Tabelle legen und die Tastenkombination drücken, um in den "Accessibility Modus" zu gelangen. Standardmäßig erreicht man dies mit "STRG (CTRL) + H".
